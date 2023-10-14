@@ -19,6 +19,7 @@ private:
 public:
     // Composicion
     file csv;
+    std::vector<std::vector<std::string>> Datos;
 
     /**
      * Constructor de la clase Inventario
@@ -58,10 +59,9 @@ public:
     int Inventario::GetCantidad()
     {
 
-        std::vector<std::vector<std::string>> Datos;
         Datos = csv.readV();
 
-        Cantidad = Datos.size();
+        Cantidad = (Datos.size())-1;
 
         return Cantidad;
     }
@@ -74,13 +74,10 @@ public:
     int Inventario::GetDepositos()
     {
 
-        std::vector<std::vector<std::string>> Datos;
         Datos = csv.readV();
 
-        Depositos = (Datos[0].size())-3;
+        Depositos = (Datos[0].size()) - 3;
 
         return Depositos;
     }
-
-
 };
