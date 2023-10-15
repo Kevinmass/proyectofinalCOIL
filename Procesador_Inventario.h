@@ -1,10 +1,23 @@
 #include <iostream>
+#include "Inventario.h"
+/**
+ * Clase encargada de las funciones de visualizacion del menu
+ * @tparam -
+ * @return Datos que el cliente desea ver del archivo
+ */
+
 class Procesador_Inventario
 {
 private:
 public:
     void menu();
 };
+
+/**
+ * Funcion que muestra el menu de opciones
+ * @tparam -
+ * @return Datos que el cliente desea ver del archivo
+ */
 
 void Procesador_Inventario::menu()
 {
@@ -45,6 +58,8 @@ void Procesador_Inventario::menu()
             break;
         case 5:
             system("cls");
+
+          
             std::cout << "\n\n          - - -  Stock individual de cada articulo  - - -\n\n\n";
             break;
         case 6:
