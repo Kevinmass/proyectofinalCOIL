@@ -10,7 +10,7 @@ int main()
     cout << "Ingrese el nombre del archivo: ";
     cin >> nombre;
 
-    cout << inventario.StockTotal(nombre);
+    inventario.StockTotal(nombre);
 
     
 
