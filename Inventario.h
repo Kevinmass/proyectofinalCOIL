@@ -151,14 +151,30 @@ public:
      * @return void
      */
 
-    void StockTotal(std::string codigoB)
+    void StockTotalC(std::string codigoB)
     {
-        std::cout << "Ingrese el codigo de barras (entre comillas)" << std::endl;
-
         std::string codigoB;
+        std::vector<std::vector<std::string>> dataSE;
         std::vector<std::vector<std::string>> dataO;
 
-        dataO = shellSort(Datos);
+        std::cout << "Ingrese el codigo de barras (entre comillas)" << std::endl;
+
+        std::getline(std::cin, codigoB);
+
+        // Quita los espacios en blanco sin perder los datos introducidos despues de teclear el espacio
+        codigoB.erase(std::remove_if(codigoB.begin(), codigoB.end(),
+                                     [](char &c)
+                                     {
+                                         return std::isspace<char>(c, std::locale::classic());
+                                     }),
+                      codigoB.end());
+
+
+        Datos = csv.readV();
+
+        dataSE = csv.DataSE(Datos);
+
+        dataO = shellSort(dataSE);
 
         int pos = 0;
 
@@ -183,6 +199,8 @@ public:
 
                 std::cout << Datos[pos][i] << "        ";
             }
+
+    
         }
     }
 };
