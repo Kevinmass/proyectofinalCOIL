@@ -101,10 +101,8 @@ int main()
 
     for (int i = 0; i < dataSE.size(); i++)
     {
-        for (int j = 0; j < dataSE[0].size(); j++)
-        {
-            dataSE[i][j].erase(remove_if(dataSE[i][j].begin(), dataSE[i][j].end(), ::isspace), dataSE[i][j].end());
-        }
+
+        dataSE[i][1].erase(remove_if(dataSE[i][1].begin(), dataSE[i][1].end(), ::isspace), dataSE[i][1].end());
     }
 
     cout << "Ingrese el codigo de barras (entre comillas)" << endl;
@@ -148,7 +146,7 @@ int main()
         if (i != 1)
         {
 
-            cout << data[pos][i] << "        ";
+            cout << dataSE[pos][i] << "        ";
         }
     }
 

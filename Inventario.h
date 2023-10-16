@@ -1,4 +1,6 @@
 #include <string.h>
+#include <cctype>
+#include <algorithm>
 #include "File.h"
 
 class Inventario
@@ -56,26 +58,32 @@ public:
     {
         int n = arr.size();
 
-        // Start with a big gap, then reduce the gap
+        // Comenzar con un gran espacio, luego reducirlo
         for (int gap = n / 2; gap > 0; gap /= 2)
         {
-
+            
+            // Hacer un ordenamiento con el espacio actual
             for (int i = gap; i < n; i += 1)
             {
 
+                // Guardar el valor actual para que no se pierda
                 std::vector<std::string> temp = arr[i];
 
+                //Creamos un string aux para utilizar la funcion strcmp
                 std::string codAUX = arr[i][1];
                 int j;
+                // Mover los elementos en el espacio si son mayores que el valor temporal de arr[i]
                 for (j = i; j >= gap && strcmp(arr[j - gap][1].c_str(), codAUX.c_str()) > 0; j -= gap)
                 {
                     arr[j] = arr[j - gap];
                 }
 
+                // Colocar el valor temporal en su lugar
                 arr[j] = temp;
             }
         }
 
+        //Retornar el vector de vectores de string ordenado
         return arr;
     }
 
@@ -172,7 +180,7 @@ public:
 
         Datos = csv.readV();
 
-        dataSE = csv.DataSE(Datos);
+        dataSE = csv.DataSE_COD(Datos);
 
         dataO = shellSort(dataSE);
 
@@ -184,7 +192,7 @@ public:
 
         std::cout << "Grupo -    Articulo-                    ";
 
-        for (int i = 0; i < (Datos[0].size()) - 3; i++)
+        for (int i = 0; i < GetDepositos(); i++)
         {
             std::cout << "        D" << i + 1;
         }

@@ -2,8 +2,7 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
-#include <cctype>
-#include <algorithm>
+
 
 /**
  * Clase encargada de las funciones de manejo de archivo
@@ -55,22 +54,20 @@ public:
     }
 
     /**
-     * Funcion que quita los espacios en blanco entre los strings de las diferentes posiciones del vector de vectores
+     * Funcion que quita los espacios en blanco entre los strings de las diferentes posiciones del vector de vectores en la columna del codigo
      * @tparam Vector de vectores de strings
      * @return Vector de vectores de strings sin espacios en blanco
      */
 
-    std::vector<std::vector<std::string>> DataSE(std::vector<std::vector<std::string>> &arr)
+    std::vector<std::vector<std::string>> DataSE_COD(std::vector<std::vector<std::string>> &arr)
     {
 
         std::vector<std::vector<std::string>> dataSE = arr;
 
         for (int i = 0; i < dataSE.size(); i++)
         {
-            for (int j = 0; j < dataSE[0].size(); j++)
-            {
-                dataSE[i][j].erase(remove_if(dataSE[i][j].begin(), dataSE[i][j].end(), ::isspace), dataSE[i][j].end());
-            }
+
+            dataSE[i][1].erase(remove_if(dataSE[i][1].begin(), dataSE[i][1].end(), ::isspace), dataSE[i][1].end());
         }
 
         return dataSE;
