@@ -161,13 +161,9 @@ public:
 
     void StockTotalC(std::string codigoB)
     {
-        std::string codigoB;
         std::vector<std::vector<std::string>> dataSE;
         std::vector<std::vector<std::string>> dataO;
 
-        std::cout << "Ingrese el codigo de barras (entre comillas)" << std::endl;
-
-        std::getline(std::cin, codigoB);
 
         // Quita los espacios en blanco sin perder los datos introducidos despues de teclear el espacio
         codigoB.erase(std::remove_if(codigoB.begin(), codigoB.end(),
@@ -205,7 +201,7 @@ public:
             if (i != 1)
             {
 
-                std::cout << Datos[pos][i] << "        ";
+                std::cout << dataSE[pos][i] << "        ";
             }
 
     

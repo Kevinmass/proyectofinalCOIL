@@ -5,15 +5,16 @@ using namespace std;
 int main()
 {
     Inventario inventario;
-    string nombre;
+    string codigo;
 
-    cout << "Ingrese el nombre del archivo: ";
-    cin >> nombre;
+    cout << "Ingrese el codigo de barra: ";
+    
+    getline(cin, codigo);
 
-    inventario.StockTotal(nombre);
+    inventario.StockTotalC(codigo);
 
     
-
+    
 
 
 
