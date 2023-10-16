@@ -3,6 +3,8 @@
 #include <sstream>
 #include <vector>
 #include <string.h>
+#include <cctype>
+#include <algorithm>
 
 using namespace std;
 
@@ -67,6 +69,7 @@ int binarySearch(std::vector<std::vector<std::string>> &arr, int l, int r, std::
 
 int main()
 {
+    // Leer el archivo csv sin espacios en blanco
     std::ifstream file("InventariO.csv");
 
     if (!file.is_open())
@@ -93,15 +96,36 @@ int main()
 
     file.close();
 
+    // quitar espacios en blanco entre los strings de las diferentes posiciones del vector de vectores
+    std::vector<std::vector<std::string>> dataSE = data;
+
+    for (int i = 0; i < dataSE.size(); i++)
+    {
+        for (int j = 0; j < dataSE[0].size(); j++)
+        {
+            dataSE[i][j].erase(remove_if(dataSE[i][j].begin(), dataSE[i][j].end(), ::isspace), dataSE[i][j].end());
+        }
+    }
+
     cout << "Ingrese el codigo de barras (entre comillas)" << endl;
     int tamanio = data.size();
+    int suma = 0;
 
     string codigoB;
+    string codAUX;
     std::vector<std::vector<std::string>> dataO;
 
-    dataO = shellSort(data);
+    dataO = shellSort(dataSE);
 
-    cin >> codigoB;
+    getline(cin, codigoB);
+
+    // si codigoB tiene espacios en blanco, quitarlos
+    codigoB.erase(std::remove_if(codigoB.begin(), codigoB.end(),
+                                 [](char &c)
+                                 {
+                                     return std::isspace<char>(c, std::locale::classic());
+                                 }),
+                  codigoB.end());
 
     int pos = 0;
 
@@ -124,7 +148,7 @@ int main()
         if (i != 1)
         {
 
-            cout<< data[pos][i] << "        ";
+            cout << data[pos][i] << "        ";
         }
     }
 
