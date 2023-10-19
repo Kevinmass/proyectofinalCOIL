@@ -1,7 +1,14 @@
 #include <string.h>
+#include <string>
+#include <limits>
 #include <cctype>
 #include <algorithm>
 #include "File.h"
+
+/* Clase encargada de las funciones de manejo del Inventario del archivo --> Datos
+ * @tparam Char -> Datos del archivo dado por el cliente --> Compocision con la clase file
+ * @return Distintas funciones utiles para el manejo del inventario
+ */
 
 class Inventario
 {
@@ -61,7 +68,7 @@ public:
         // Comenzar con un gran espacio, luego reducirlo
         for (int gap = n / 2; gap > 0; gap /= 2)
         {
-            
+
             // Hacer un ordenamiento con el espacio actual
             for (int i = gap; i < n; i += 1)
             {
@@ -69,7 +76,7 @@ public:
                 // Guardar el valor actual para que no se pierda
                 std::vector<std::string> temp = arr[i];
 
-                //Creamos un string aux para utilizar la funcion strcmp
+                // Creamos un string aux para utilizar la funcion strcmp
                 std::string codAUX = arr[i][1];
                 int j;
                 // Mover los elementos en el espacio si son mayores que el valor temporal de arr[i]
@@ -83,7 +90,7 @@ public:
             }
         }
 
-        //Retornar el vector de vectores de string ordenado
+        // Retornar el vector de vectores de string ordenado
         return arr;
     }
 
@@ -164,7 +171,6 @@ public:
         std::vector<std::vector<std::string>> dataSE;
         std::vector<std::vector<std::string>> dataO;
 
-
         // Quita los espacios en blanco sin perder los datos introducidos despues de teclear el espacio
         codigoB.erase(std::remove_if(codigoB.begin(), codigoB.end(),
                                      [](char &c)
@@ -172,7 +178,6 @@ public:
                                          return std::isspace<char>(c, std::locale::classic());
                                      }),
                       codigoB.end());
-
 
         Datos = csv.readV();
 
@@ -203,8 +208,25 @@ public:
 
                 std::cout << dataSE[pos][i] << "        ";
             }
+        }
 
-    
+        std::cout << std::endl;
+
+        // Cantidad total de productos
+        int CantidadTotal = 0;
+
+        for (int i = 3; i < GetCantidad(); i++)
+        {
+            dataSE[pos][i].erase(std::remove(dataSE[pos][i].begin(), dataSE[pos][i].end(), '\"'), dataSE[pos][i].end());
+            dataSE[pos][i].erase(std::remove(dataSE[pos][i].begin(), dataSE[pos][i].end(), ' '), dataSE[pos][i].end());
+
+            if (!dataSE[pos][i].empty())
+            {
+                CantidadTotal = CantidadTotal + std::stoi(dataSE[pos][i]);
+                std::cout << "Valor convertido a entero: " << std::stoi(dataSE[pos][i]) << std::endl;
+            }
+
+            std::cout << CantidadTotal << std::endl;
         }
     }
 };
