@@ -26,6 +26,8 @@ public:
     // Composicion
     file csv;
     std::vector<std::vector<std::string>> Datos;
+    std::vector<std::vector<std::string>> dataSE;
+    std::vector<std::vector<std::string>> dataO;
 
     /**
      * Constructor de la clase Inventario
@@ -61,7 +63,7 @@ public:
      * @tparam Vector de vectores de string
      * @return Vector de vectores de string ordenado
      */
-    std::vector<std::vector<std::string>> shellSort(std::vector<std::vector<std::string>> &arr)
+    std::vector<std::vector<std::string>> shellSort(std::vector<std::vector<std::string>> &arr, int columna)
     {
         int n = arr.size();
 
@@ -77,10 +79,10 @@ public:
                 std::vector<std::string> temp = arr[i];
 
                 // Creamos un string aux para utilizar la funcion strcmp
-                std::string codAUX = arr[i][1];
+                std::string codAUX = arr[i][columna];
                 int j;
                 // Mover los elementos en el espacio si son mayores que el valor temporal de arr[i]
-                for (j = i; j >= gap && strcmp(arr[j - gap][1].c_str(), codAUX.c_str()) > 0; j -= gap)
+                for (j = i; j >= gap && strcmp(arr[j - gap][columna].c_str(), codAUX.c_str()) > 0; j -= gap)
                 {
                     arr[j] = arr[j - gap];
                 }
@@ -99,28 +101,28 @@ public:
      * @tparam Vector de vectores de string
      * @return Posicion del elemento buscado
      */
-    int binarySearch(std::vector<std::vector<std::string>> &arr, int l, int r, std::string codigoB)
+    int binarySearch(std::vector<std::vector<std::string>> &arr, int l, int r, std::string Identificador, int columna)
     {
         if (r >= l)
         {
             int mid = l + (r - l) / 2;
 
-            std::string codAUX = arr[mid][1];
+            std::string codAUX = arr[mid][columna];
 
             // Si el elemento esta en la mitad
-            if (strcmp(codAUX.c_str(), codigoB.c_str()) == 0)
+            if (strcmp(codAUX.c_str(), Identificador.c_str()) == 0)
             {
                 return mid;
             }
             // Si el elemento es menor que la mitad, entonces esta en la izquierda
-            if (strcmp(codAUX.c_str(), codigoB.c_str()) > 0)
+            if (strcmp(codAUX.c_str(), Identificador.c_str()) > 0)
             {
-                return binarySearch(arr, l, mid - 1, codigoB);
+                return binarySearch(arr, l, mid - 1, Identificador, columna);
             }
             // Si el elemento es mayor que la mitad, entonces esta en la derecha
-            if (strcmp(codAUX.c_str(), codigoB.c_str()) < 0)
+            if (strcmp(codAUX.c_str(), Identificador.c_str()) < 0)
             {
-                return binarySearch(arr, mid + 1, r, codigoB);
+                return binarySearch(arr, mid + 1, r, Identificador, columna);
             }
         }
 
@@ -168,8 +170,6 @@ public:
 
     void StockTotal_CODIGO(std::string codigoB)
     {
-        std::vector<std::vector<std::string>> dataSE;
-        std::vector<std::vector<std::string>> dataO;
 
         // Quita los espacios en blanco sin perder los datos introducidos despues de teclear el espacio
         codigoB.erase(std::remove_if(codigoB.begin(), codigoB.end(),
@@ -183,11 +183,11 @@ public:
 
         dataSE = csv.DataSE(Datos, 1);
 
-        dataO = shellSort(dataSE);
+        dataO = shellSort(dataSE, 1);
 
         int pos = 0;
 
-        pos = (binarySearch(dataO, 0, GetCantidad(), codigoB));
+        pos = (binarySearch(dataO, 0, GetCantidad(), codigoB, 1));
 
         std::cout << "--DATOS DEL PRODUCTO-- " << std::endl;
 
@@ -215,10 +215,9 @@ public:
         // Cantidad total de productos
         int CantidadTotal = 0;
 
-        
         for (int i = 3; i < dataSE[pos].size(); i++)
         {
-            
+
             std::string cantidadStr = dataSE[pos][i];
             cantidadStr.erase(std::remove(cantidadStr.begin(), cantidadStr.end(), '\"'), cantidadStr.end());
 
@@ -229,5 +228,109 @@ public:
         }
 
         std::cout << "Cantidad total de productos: " << CantidadTotal << std::endl;
+    }
+
+    /**
+     * Funcion que Muestra el inventario completo junto al grupo y nombre del articulo
+     * @tparam string NombreArticulo
+     * @return void
+     */
+
+    void StockTotal_NOMBRE(std::string NombreArticulo)
+    {
+
+        std::vector<std::vector<std::string>> dataSE;
+        std::vector<std::vector<std::string>> dataO;
+
+        // Quita los espacios en blanco sin perder los datos introducidos despues de teclear el espacio
+        NombreArticulo.erase(std::remove_if(NombreArticulo.begin(), NombreArticulo.end(),
+                                            [](char &c)
+                                            {
+                                                return std::isspace<char>(c, std::locale::classic());
+                                            }),
+                             NombreArticulo.end());
+
+        Datos = csv.readV();
+
+        dataSE = csv.DataSE(Datos, 2);
+
+        dataO = shellSort(dataSE, 2);
+
+        int pos = 0;
+
+        pos = (binarySearch(dataO, 0, GetCantidad(), NombreArticulo, 2));
+
+        std::cout << "--DATOS DEL PRODUCTO-- " << std::endl;
+
+        std::cout << "Grupo -    Codigo de barra-                    ";
+
+        for (int i = 0; i < GetDepositos(); i++)
+        {
+            std::cout << "        D" << i + 1;
+        }
+
+        std::cout << std::endl;
+
+        for (int i = 0; i < Datos[0].size(); i++)
+        {
+
+            if (i != 2)
+            {
+
+                std::cout << dataSE[pos][i] << "        ";
+            }
+        }
+
+        std::cout << std::endl;
+
+        // Cantidad total de productos
+        int CantidadTotal = 0;
+
+        for (int i = 3; i < dataSE[pos].size(); i++)
+        {
+
+            std::string cantidadStr = dataSE[pos][i];
+            cantidadStr.erase(std::remove(cantidadStr.begin(), cantidadStr.end(), '\"'), cantidadStr.end());
+
+            if (!cantidadStr.empty())
+            {
+                CantidadTotal += std::stoi(cantidadStr);
+            }
+        }
+
+        std::cout << "Cantidad total de productos: " << CantidadTotal << std::endl;
+    }
+
+    /**
+     * Funcion que Muestra el inventario completo de los articulos de los grupos encontrados en el archivo
+     * @tparam void
+     * @return void
+     */
+
+    void GruposArticulos()
+    {
+
+        Datos = csv.readV();
+
+        dataO = shellSort(Datos, 0);
+        int Pnum = 1;
+
+        std::cout << "--GRUPOS DE ARTICULOS-- " << std::endl;
+
+
+        std::cout << std::endl;
+
+        for (int i = 0; i < dataO.size(); i++)
+        {
+
+            std::string grupo = dataO[i][0];
+            grupo.erase(std::remove(grupo.begin(), grupo.end(), '\"'), grupo.end());
+
+            if (grupo != "\0" && grupo != "Grupo")
+            {
+                std::cout << Pnum << ". " << grupo << std::endl;
+                Pnum++;
+            }
+        }
     }
 };
