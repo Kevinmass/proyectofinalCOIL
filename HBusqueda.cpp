@@ -24,3 +24,14 @@ int binarySearch(std::vector<std::vector<std::string>> &arr, int l, int r, std::
     // Si el elemento no esta en el vector
     return -1;
 }
+
+
+//Ordenar vector de vectores de string por nombre
+
+
+
+
+
+
+
+

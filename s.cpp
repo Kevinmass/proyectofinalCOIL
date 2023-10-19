@@ -4,6 +4,7 @@
 #include <vector>
 #include <string.h>
 #include <cctype>
+#include "ListaV.h"
 #include <algorithm>
 
 using namespace std;
@@ -69,15 +70,13 @@ int binarySearch(std::vector<std::vector<std::string>> &arr, int l, int r, std::
 
 int main()
 {
-    // Leer el archivo csv sin espacios en blanco
     std::ifstream file("InventariO.csv");
-
     if (!file.is_open())
     {
         std::cerr << "Failed to open file\n";
     }
 
-    std::vector<std::vector<std::string>> data;
+    ListaV<std::vector<std::string>> Data;
 
     std::string line;
     while (std::getline(file, line))
@@ -91,64 +90,29 @@ int main()
             row.push_back(cell);
         }
 
-        data.push_back(row);
+        Data.insertarV(row);
     }
+
+    Data.invertirV();
 
     file.close();
 
-    // quitar espacios en blanco entre los strings de las diferentes posiciones del vector de vectores
-    std::vector<std::vector<std::string>> dataSE = data;
+    ListaV<std::vector<std::string>> dataSE = Data;
 
-    for (int i = 0; i < dataSE.size(); i++)
+    for (int i = 0; i < dataSE.getTamanio(); i++)
     {
 
-        dataSE[i][1].erase(remove_if(dataSE[i][1].begin(), dataSE[i][1].end(), ::isspace), dataSE[i][1].end());
+        dataSE(i, 1).erase(remove_if(dataSE(i, 1).begin(), dataSE(i, 1).end(), ::isspace), dataSE(i, 1).end());
     }
 
-    cout << "Ingrese el codigo de barras (entre comillas)" << endl;
-    int tamanio = data.size();
-    int suma = 0;
+    cout << "Data nueva sin espacios en blanco: " << endl;
 
-    string codigoB;
-    string codAUX;
-    std::vector<std::vector<std::string>> dataO;
-
-    dataO = shellSort(dataSE);
-
-    getline(cin, codigoB);
-
-    // si codigoB tiene espacios en blanco, quitarlos
-    codigoB.erase(std::remove_if(codigoB.begin(), codigoB.end(),
-                                 [](char &c)
-                                 {
-                                     return std::isspace<char>(c, std::locale::classic());
-                                 }),
-                  codigoB.end());
-
-    int pos = 0;
-
-    pos = (binarySearch(dataO, 0, tamanio, codigoB));
-
-    cout << "--DATOS DEL PRODUCTO-- " << endl;
-
-    cout << "Grupo -    Articulo-                    ";
-
-    for (int i = 0; i < (data[0].size()) - 3; i++)
+    for (int i = 0; i < dataSE.getTamanio(); i++)
     {
-        cout << "        D" << i + 1;
-    }
-
-    cout << endl;
-
-    for (int i = 0; i < data[0].size(); i++)
-    {
-
-        if (i != 1)
+        for (int j = 0; j < dataSE.getTamanio(0); j++)
         {
-
-            cout << dataSE[pos][i] << "        ";
+            cout << dataSE(i, j) << " ";
         }
+        cout << endl;
     }
-
-    return 0;
 }

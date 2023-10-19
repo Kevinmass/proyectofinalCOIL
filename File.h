@@ -1,8 +1,10 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <vector>
-
+//#include "Lista.h"
+#include "ListaV.h"
+#include <cctype>
+#include <algorithm>
 
 /**
  * Clase encargada de las funciones de manejo de archivo
@@ -15,23 +17,26 @@ class file
 
 private:
 public:
+    file() {}
+
+    ~file() {}
+
     /**
-     * Funcion que lee el archivo y lo guarda en un vector de vectores de strings
+     * Funcion que lee el archivo y lo guarda en un Lista de vectores de strings
      * @tparam void
-     * @return Data -> datos del archivo csv en forma de vector de vectores de strings
+     * @return Data -> datos del archivo csv en forma de Lista de vectores de strings
      */
-    std::vector<std::vector<std::string>> readV()
+    ListaV<std::vector<std::string>> readV()
     {
         // incluir archivo tecleado por el usuario -> En lo posible
 
-        std::ifstream file("Inventario.csv", std::ios::in);
-
+        std::ifstream file("InventariO.csv");
         if (!file.is_open())
         {
             std::cerr << "Failed to open file\n";
         }
 
-        std::vector<std::vector<std::string>> data;
+        ListaV<std::vector<std::string>> Data;
 
         std::string line;
         while (std::getline(file, line))
@@ -45,29 +50,30 @@ public:
                 row.push_back(cell);
             }
 
-            data.push_back(row);
+            Data.insertarV(row);
         }
+        
+        Data.invertirV();
 
         file.close();
 
-        return data;
+        return Data;
     }
-
     /**
      * Funcion que quita los espacios en blanco entre los strings de las diferentes posiciones del vector de vectores en la columna del codigo
      * @tparam Vector de vectores de strings
      * @return Vector de vectores de strings sin espacios en blanco
      */
 
-    std::vector<std::vector<std::string>> DataSE_COD(std::vector<std::vector<std::string>> &arr)
+    ListaV<std::vector<std::string>> DataSE_COD(ListaV<std::vector<std::string>> &arr)
     {
 
-        std::vector<std::vector<std::string>> dataSE = arr;
+        ListaV<std::vector<std::string>> dataSE = arr;
 
-        for (int i = 0; i < dataSE.size(); i++)
+        for (int i = 0; i < dataSE.getTamanio(); i++)
         {
 
-            dataSE[i][1].erase(remove_if(dataSE[i][1].begin(), dataSE[i][1].end(), ::isspace), dataSE[i][1].end());
+            dataSE(i,1).erase(remove_if(dataSE(i,1).begin(), dataSE(i,1).end(), ::isspace), dataSE(i,1).end());
         }
 
         return dataSE;
