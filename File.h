@@ -3,6 +3,7 @@
 #include <sstream>
 #include <vector>
 
+//.
 
 /**
  * Clase encargada de las funciones de manejo de archivo
