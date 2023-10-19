@@ -1,6 +1,4 @@
 #include <string.h>
-#include <cctype>
-#include <algorithm>
 #include "File.h"
 
 class Inventario
@@ -18,7 +16,7 @@ private:
 public:
     // Composicion
     file csv;
-    std::vector<std::vector<std::string>> Datos;
+    ListaV<std::vector<std::string>> Datos;
 
     /**
      * Constructor de la clase Inventario
@@ -50,13 +48,13 @@ public:
     }
 
     /**
-     * Funcion que permite ordenar el vector de vectores de string por codigo de barra
-     * @tparam Vector de vectores de string
-     * @return Vector de vectores de string ordenado
+     * Funcion que permite ordenar la Lista de vectores de string por codigo de barra
+     * @tparam arr -> Lista de vectores de string
+     * @return arr
      */
-    std::vector<std::vector<std::string>> shellSort(std::vector<std::vector<std::string>> &arr)
+    ListaV<std::vector<std::string>> shellSort(ListaV<std::vector<std::string>> &arr)
     {
-        int n = arr.size();
+        int n = arr.getTamanio();
 
         // Comenzar con un gran espacio, luego reducirlo
         for (int gap = n / 2; gap > 0; gap /= 2)
@@ -70,10 +68,10 @@ public:
                 std::vector<std::string> temp = arr[i];
 
                 //Creamos un string aux para utilizar la funcion strcmp
-                std::string codAUX = arr[i][1];
+                std::string codAUX = arr(i,1);
                 int j;
                 // Mover los elementos en el espacio si son mayores que el valor temporal de arr[i]
-                for (j = i; j >= gap && strcmp(arr[j - gap][1].c_str(), codAUX.c_str()) > 0; j -= gap)
+                for (j = i; j >= gap && strcmp(arr(j-gap,1).c_str(), codAUX.c_str()) > 0; j -= gap)
                 {
                     arr[j] = arr[j - gap];
                 }
@@ -92,13 +90,13 @@ public:
      * @tparam Vector de vectores de string
      * @return Posicion del elemento buscado
      */
-    int binarySearch(std::vector<std::vector<std::string>> &arr, int l, int r, std::string codigoB)
+    int binarySearch(ListaV<std::vector<std::string>> &arr, int l, int r, std::string codigoB)
     {
         if (r >= l)
         {
             int mid = l + (r - l) / 2;
 
-            std::string codAUX = arr[mid][1];
+            std::string codAUX = arr(mid,1);
 
             // Si el elemento esta en la mitad
             if (strcmp(codAUX.c_str(), codigoB.c_str()) == 0)
@@ -133,7 +131,7 @@ public:
 
         Datos = csv.readV();
 
-        Cantidad = Datos.size();
+        Cantidad = Datos.getTamanio();
 
         return Cantidad;
     }
@@ -148,7 +146,7 @@ public:
 
         Datos = csv.readV();
 
-        Depositos = (Datos[0].size()) - 3;
+        Depositos = (Datos.getTamanio(0)) - 3;
 
         return Depositos;
     }
@@ -161,8 +159,8 @@ public:
 
     void StockTotalC(std::string codigoB)
     {
-        std::vector<std::vector<std::string>> dataSE;
-        std::vector<std::vector<std::string>> dataO;
+        ListaV<std::vector<std::string>> dataSE;
+        ListaV<std::vector<std::string>> dataO;
 
 
         // Quita los espacios en blanco sin perder los datos introducidos despues de teclear el espacio
@@ -195,13 +193,13 @@ public:
 
         std::cout << std::endl;
 
-        for (int i = 0; i < Datos[0].size(); i++)
+        for (int i = 0; i < Datos.getTamanio(0); i++)
         {
 
             if (i != 1)
             {
 
-                std::cout << dataSE[pos][i] << "        ";
+                std::cout << dataSE(pos, i) << "        ";
             }
 
     
