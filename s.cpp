@@ -150,5 +150,25 @@ int main()
         }
     }
 
+    // Cantidad total de productos
+
+    // Cantidad total de productos
+    int CantidadTotal = 0;
+
+    // Iterar sobre las columnas del vector dataSE para calcular la cantidad total
+    for (int i = 3; i < dataSE[pos].size(); i++)
+    {
+        // Eliminar comillas dobles de los elementos y convertir a entero
+        std::string cantidadStr = dataSE[pos][i];
+        cantidadStr.erase(std::remove(cantidadStr.begin(), cantidadStr.end(), '\"'), cantidadStr.end());
+
+        if (!cantidadStr.empty())
+        {
+            CantidadTotal += std::stoi(cantidadStr);
+        }
+    }
+
+    cout << "Cantidad total de productos: " << CantidadTotal << endl;
+
     return 0;
 }

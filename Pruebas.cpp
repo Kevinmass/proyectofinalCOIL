@@ -11,7 +11,7 @@ int main()
     
     getline(cin, codigo);
 
-    inventario.StockTotalC(codigo);
+    inventario.StockTotal_CODIGO(codigo);
 
     
     

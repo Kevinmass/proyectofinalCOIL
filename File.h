@@ -60,7 +60,7 @@ public:
      * @return Vector de vectores de strings sin espacios en blanco
      */
 
-    std::vector<std::vector<std::string>> DataSE_COD(std::vector<std::vector<std::string>> &arr)
+    std::vector<std::vector<std::string>> DataSE(std::vector<std::vector<std::string>> &arr, int Columna)
     {
 
         std::vector<std::vector<std::string>> dataSE = arr;
@@ -68,7 +68,7 @@ public:
         for (int i = 0; i < dataSE.size(); i++)
         {
 
-            dataSE[i][1].erase(remove_if(dataSE[i][1].begin(), dataSE[i][1].end(), ::isspace), dataSE[i][1].end());
+            dataSE[i][Columna].erase(remove_if(dataSE[i][Columna].begin(), dataSE[i][Columna].end(), ::isspace), dataSE[i][Columna].end());
         }
 
         return dataSE;

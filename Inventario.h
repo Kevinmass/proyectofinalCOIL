@@ -166,7 +166,7 @@ public:
      * @return void
      */
 
-    void StockTotalC(std::string codigoB)
+    void StockTotal_CODIGO(std::string codigoB)
     {
         std::vector<std::vector<std::string>> dataSE;
         std::vector<std::vector<std::string>> dataO;
@@ -181,7 +181,7 @@ public:
 
         Datos = csv.readV();
 
-        dataSE = csv.DataSE_COD(Datos);
+        dataSE = csv.DataSE(Datos, 1);
 
         dataO = shellSort(dataSE);
 
@@ -215,18 +215,19 @@ public:
         // Cantidad total de productos
         int CantidadTotal = 0;
 
-        for (int i = 3; i < GetCantidad(); i++)
+        
+        for (int i = 3; i < dataSE[pos].size(); i++)
         {
-            dataSE[pos][i].erase(std::remove(dataSE[pos][i].begin(), dataSE[pos][i].end(), '\"'), dataSE[pos][i].end());
-            dataSE[pos][i].erase(std::remove(dataSE[pos][i].begin(), dataSE[pos][i].end(), ' '), dataSE[pos][i].end());
+            
+            std::string cantidadStr = dataSE[pos][i];
+            cantidadStr.erase(std::remove(cantidadStr.begin(), cantidadStr.end(), '\"'), cantidadStr.end());
 
-            if (!dataSE[pos][i].empty())
+            if (!cantidadStr.empty())
             {
-                CantidadTotal = CantidadTotal + std::stoi(dataSE[pos][i]);
-                std::cout << "Valor convertido a entero: " << std::stoi(dataSE[pos][i]) << std::endl;
+                CantidadTotal += std::stoi(cantidadStr);
             }
-
-            std::cout << CantidadTotal << std::endl;
         }
+
+        std::cout << "Cantidad total de productos: " << CantidadTotal << std::endl;
     }
 };
