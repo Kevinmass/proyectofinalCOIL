@@ -317,8 +317,8 @@ public:
 
         std::cout << "--GRUPOS DE ARTICULOS-- " << std::endl;
 
-
         std::cout << std::endl;
+        std::vector<std::string> grupos;
 
         for (int i = 0; i < dataO.size(); i++)
         {
@@ -329,8 +329,79 @@ public:
             if (grupo != "\0" && grupo != "Grupo")
             {
                 std::cout << Pnum << ". " << grupo << std::endl;
+                grupos.push_back(grupo);
                 Pnum++;
             }
         }
+
+        std::cout << std::endl;
+
+        std::cout << "Ingrese el numero del grupo que desea ver: " << std::endl;
+
+        Datos = csv.readV();
+
+        int n=0;
+        int pos = 0;
+
+        int numGrupo = 0;
+
+        std::cin >> numGrupo;
+
+        std::cout << std::endl;
+
+        std::cout << "--ARTICULOS DEL GRUPO "  << grupos[numGrupo - 1]<< "-- " << std::endl;
+
+
+        std::cout << std::endl;
+
+        std::string grupoAUX1 = grupos[numGrupo];
+        std::string grupoAUX2 = grupos[numGrupo - 1];
+        
+        grupoAUX1 = "\"" + grupoAUX1 + "\"";
+        grupoAUX2 = "\"" + grupoAUX2 + "\"";
+
+       
+        for (int i = 1; i < Datos.size(); i++)
+        {   
+            pos++;
+            std::string DatosAUX = Datos[i][0];
+            if (strcmp(DatosAUX.c_str(), grupoAUX2.c_str()) == 0)
+            {
+               break;
+            }
+        }
+        
+
+        for (int i = pos; i < Datos.size(); i++)
+        {   
+            n++;
+            std::string DatosAUX = Datos[i][0];
+            if (strcmp(DatosAUX.c_str(), grupoAUX1.c_str()) == 0)
+            {
+               break;
+            }
+        }
+
+
+        for (int i = pos; i < (n+pos)-1; i++)
+        {
+           std::cout << "-----> " << Datos[i][2] << std::endl;
+           std::cout << "       " << Datos[i][1] << std::endl;
+           std::cout << std::endl;
+        }
+        
+
+        
+        
+        
+
+        
+
+        
+           
+
+           
+
+        
     }
 };
