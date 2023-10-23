@@ -8,17 +8,4 @@ int main()
     string codigo;
 
     inventario.GruposArticulos();
-
-    
-    
-
-
-
-
-    
-
-    
-    
-
-
 }
