@@ -3,6 +3,7 @@
 #include <limits>
 #include <cctype>
 #include <algorithm>
+#include <ctime>
 #include "File.h"
 
 /* Clase encargada de las funciones de manejo del Inventario del archivo --> Datos
@@ -171,6 +172,10 @@ public:
     void StockTotal_CODIGO(std::string codigoB)
     {
 
+        int t0, t1;
+
+        t0 = clock();
+        
         // Quita los espacios en blanco sin perder los datos introducidos despues de teclear el espacio
         codigoB.erase(std::remove_if(codigoB.begin(), codigoB.end(),
                                      [](char &c)
@@ -191,23 +196,17 @@ public:
 
         std::cout << "--DATOS DEL PRODUCTO-- " << std::endl;
 
-        std::cout << "Grupo -    Articulo-                    ";
-
-        for (int i = 0; i < GetDepositos(); i++)
-        {
-            std::cout << "        D" << i + 1;
-        }
-
         std::cout << std::endl;
 
-        for (int i = 0; i < Datos[0].size(); i++)
+        std::cout << "-Codigo de barras " << codigoB << " ENCONTRADO" << std::endl;
+        std::cout << "-Nombre del Articulo: " << dataSE[pos][2] << std::endl;
+
+        // Cantidad x deposito del producto
+        std::cout << std::endl;
+        std::cout << "--Cantidad por deposito--" << std::endl;
+        for (int i = 3; i < dataSE[pos].size(); i++)
         {
-
-            if (i != 1)
-            {
-
-                std::cout << dataSE[pos][i] << "        ";
-            }
+            std::cout << "Deposito " << i - 2 << ": " << dataSE[pos][i] << std::endl;
         }
 
         std::cout << std::endl;
@@ -228,6 +227,14 @@ public:
         }
 
         std::cout << "Cantidad total de productos: " << CantidadTotal << std::endl;
+
+        std::cout << std::endl;
+
+        t1 = clock();
+
+        double time = (double(t1 - t0) / CLOCKS_PER_SEC);
+
+        std::cout << "Tiempo de ejecucion: " << time << std::endl;
     }
 
     /**
@@ -238,9 +245,9 @@ public:
 
     void StockTotal_NOMBRE(std::string NombreArticulo)
     {
+        int t0, t1;
 
-        std::vector<std::vector<std::string>> dataSE;
-        std::vector<std::vector<std::string>> dataO;
+        t0 = clock();
 
         // Quita los espacios en blanco sin perder los datos introducidos despues de teclear el espacio
         NombreArticulo.erase(std::remove_if(NombreArticulo.begin(), NombreArticulo.end(),
@@ -262,23 +269,17 @@ public:
 
         std::cout << "--DATOS DEL PRODUCTO-- " << std::endl;
 
-        std::cout << "Grupo -    Codigo de barra-                    ";
-
-        for (int i = 0; i < GetDepositos(); i++)
-        {
-            std::cout << "        D" << i + 1;
-        }
-
         std::cout << std::endl;
 
-        for (int i = 0; i < Datos[0].size(); i++)
+        std::cout << "-Nombre del Articulo " << NombreArticulo << " ENCONTRADO" << std::endl;
+        std::cout << "- Codigo de barras del Articulo: " << dataSE[pos][1] << std::endl;
+
+        // Cantidad x deposito del producto
+        std::cout << std::endl;
+        std::cout << "--Cantidad por deposito--" << std::endl;
+        for (int i = 3; i < dataSE[pos].size(); i++)
         {
-
-            if (i != 2)
-            {
-
-                std::cout << dataSE[pos][i] << "        ";
-            }
+            std::cout << "Deposito " << i - 2 << ": " << dataSE[pos][i] << std::endl;
         }
 
         std::cout << std::endl;
@@ -299,6 +300,14 @@ public:
         }
 
         std::cout << "Cantidad total de productos: " << CantidadTotal << std::endl;
+
+        std::cout << std::endl;
+
+        t1 = clock();
+
+        double time = (double(t1 - t0) / CLOCKS_PER_SEC);
+        
+        std::cout << "Tiempo de ejecucion: " << time << std::endl;
     }
 
     /**
@@ -310,6 +319,9 @@ public:
     void GruposArticulos()
     {
 
+        int t0, t1, t2, t3;
+
+        t0 = clock();
         Datos = csv.readV();
 
         dataO = shellSort(Datos, 0);
@@ -336,72 +348,92 @@ public:
 
         std::cout << std::endl;
 
+        t1 = clock();
+
+        double time = (double(t1 - t0) / CLOCKS_PER_SEC);
+
+        std::cout << "Tiempo de ejecucion: " << time << std::endl;
+
         std::cout << "Ingrese el numero del grupo que desea ver: " << std::endl;
 
         Datos = csv.readV();
 
-        int n=0;
+        int n = 0;
         int pos = 0;
 
         int numGrupo = 0;
 
         std::cin >> numGrupo;
 
-        std::cout << std::endl;
-
-        std::cout << "--ARTICULOS DEL GRUPO "  << grupos[numGrupo - 1]<< "-- " << std::endl;
-
+        t2 = clock();
 
         std::cout << std::endl;
+
+        std::cout << "--ARTICULOS DEL GRUPO " << grupos[numGrupo - 1] << "-- " << std::endl;
 
         std::string grupoAUX1 = grupos[numGrupo];
         std::string grupoAUX2 = grupos[numGrupo - 1];
-        
+
         grupoAUX1 = "\"" + grupoAUX1 + "\"";
         grupoAUX2 = "\"" + grupoAUX2 + "\"";
 
-       
         for (int i = 1; i < Datos.size(); i++)
-        {   
+        {
             pos++;
             std::string DatosAUX = Datos[i][0];
             if (strcmp(DatosAUX.c_str(), grupoAUX2.c_str()) == 0)
             {
-               break;
+                break;
             }
         }
-        
 
         for (int i = pos; i < Datos.size(); i++)
-        {   
+        {
             n++;
             std::string DatosAUX = Datos[i][0];
             if (strcmp(DatosAUX.c_str(), grupoAUX1.c_str()) == 0)
             {
-               break;
+                break;
             }
         }
 
-
-        for (int i = pos; i < (n+pos)-1; i++)
+        for (int i = pos; i < (n + pos) - 1; i++)
         {
-           std::cout << "-----> " << Datos[i][2] << std::endl;
-           std::cout << "       " << Datos[i][1] << std::endl;
-           std::cout << std::endl;
+            std::cout << std::endl;
+            std::cout << "-----> "
+                         "Nombre del articulo: "
+                      << Datos[i][2] << std::endl;
+            std::cout << "       Codigo de barra: " << Datos[i][1] << std::endl;
+            std::cout << std::endl;
+            std::cout << "       --Cantidad por deposito--" << std::endl;
+            for (int j = 3; j < Datos[i].size(); j++)
+            {
+                std::cout << "       " << Datos[0][j] << ": " << Datos[i][j] << std::endl;
+            }
+            std::cout << std::endl;
+
+            // Cantidad total de productos
+            int CantidadTotal = 0;
+
+            for (int j = 3; j < Datos[i].size(); j++)
+            {
+
+                std::string cantidadStr = Datos[i][j];
+                cantidadStr.erase(std::remove(cantidadStr.begin(), cantidadStr.end(), '\"'), cantidadStr.end());
+
+                if (!cantidadStr.empty())
+                {
+                    CantidadTotal += std::stoi(cantidadStr);
+                }
+            }
+
+            std::cout << "Cantidad total del producto: " << CantidadTotal << std::endl;
         }
-        
+        std::cout << std::endl;
+        t3 = clock();
 
-        
-        
-        
+        double time2 = (double(t3 - t2) / CLOCKS_PER_SEC);
 
-        
-
-        
-           
-
-           
-
-        
+        std::cout << "Tiempo de ejecucion: " << time2 << std::endl;
     }
 };
