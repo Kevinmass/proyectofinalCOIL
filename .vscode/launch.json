@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "c:/Users/kevin/Documents/carpeta kevin/C++/Programacion3/proyectofinalCOIL",
-      "program": "c:/Users/kevin/Documents/carpeta kevin/C++/Programacion3/proyectofinalCOIL/build/Debug/outDebug",
+      "cwd": "c:/Users/kevin/Documents/carpeta kevin/C++/proyectofinalCOIL",
+      "program": "c:/Users/kevin/Documents/carpeta kevin/C++/proyectofinalCOIL/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
