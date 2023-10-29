@@ -138,17 +138,15 @@ public:
      * @return Cantidad
      */
 
-    int total_art_dif()
+    int GetCantidad()
     {
 
         Datos = csv.readV();
 
         Cantidad = Datos.size();
 
-        return Cantidad-1;
+        return Cantidad;
     }
-
-    
 
     /**
      * Funcion que retorna la cantidad de Depositos en el archivo
@@ -194,7 +192,7 @@ public:
 
         int pos = 0;
 
-        pos = (binarySearch(dataO, 0, total_art_dif()+1, codigoB, 1));
+        pos = (binarySearch(dataO, 0, GetCantidad(), codigoB, 1));
 
         std::cout << "--DATOS DEL PRODUCTO-- " << std::endl;
 
@@ -243,7 +241,7 @@ public:
      * @return void
      */
 
-    void stock(std::string NombreArticulo)
+    void StockTotal_NOMBRE(std::string NombreArticulo)
     {
         int t0, t1;
 
@@ -265,7 +263,7 @@ public:
 
         int pos = 0;
 
-        pos = (binarySearch(dataO, 0, total_art_dif()+1, NombreArticulo, 2));
+        pos = (binarySearch(dataO, 0, GetCantidad(), NombreArticulo, 2));
 
         std::cout << "--DATOS DEL PRODUCTO-- " << std::endl;
 
@@ -448,63 +446,13 @@ public:
         std::cout << "Tiempo de ejecucion: " << time2 << std::endl;
     }
 
-    void stock(std::string NombreArticulo, int deposito)
-    {
-        int t0, t1;
+    // Funcion que determine la cantidad minima introducida por el usuario --> min_stock()
 
-        t0 = clock();
+    // Funcion que determine la cantidad maxima introducida por el usuario --> max_stock()
 
-        // Quita los espacios en blanco sin perder los datos introducidos despues de teclear el espacio
-        NombreArticulo.erase(std::remove_if(NombreArticulo.begin(), NombreArticulo.end(),
-                                            [](char &c)
-                                            {
-                                                return std::isspace<char>(c, std::locale::classic());
-                                            }),
-                             NombreArticulo.end());
+    //Funcion que muestre la cantidad total de articulos --> cantidad de todos los depositos de todos los articulos
 
-        Datos = csv.readV();
+    // Funcion que muestre lista de articulos con cantidad menor a la minima
 
-        dataSE = csv.DataSE(Datos, 2);
-
-        dataO = shellSort(dataSE, 2);
-
-        int pos = 0;
-
-        pos = (binarySearch(dataO, 0, total_art_dif()+1, NombreArticulo, 2));
-
-        std::cout << "--DATOS DEL PRODUCTO-- " << std::endl;
-
-        std::cout << std::endl;
-
-        std::cout << "-Nombre del Articulo " << NombreArticulo << " ENCONTRADO" << std::endl;
-        std::cout << "- Codigo de barras del Articulo: " << dataSE[pos][1] << std::endl;
-
-        // Cantidad del deposito especifico del producto
-        std::cout << std::endl;
-        std::cout << "--Cantidad del deposito--" << std::endl;
-        
-            std::cout << "Deposito " << deposito << ": " << dataSE[pos][deposito+2] << std::endl;
-        std::cout << std::endl;
-
-        // Cantidad total numerica
-        int CantidadTotal = 0;
-
-            std::string cantidadStr = dataSE[pos][deposito+2];
-            cantidadStr.erase(std::remove(cantidadStr.begin(), cantidadStr.end(), '\"'), cantidadStr.end());
-
-            if (!cantidadStr.empty())
-            {
-                CantidadTotal += std::stoi(cantidadStr);
-            }
-
-        std::cout << "Cantidad total del producto en el deposito: " << CantidadTotal << std::endl;
-
-        std::cout << std::endl;
-
-        t1 = clock();
-
-        double time = (double(t1 - t0) / CLOCKS_PER_SEC);
-
-        std::cout << "Tiempo de ejecucion: " << time << std::endl;
-    }
+    // Funcion que muestre lista de articulos con la cantidad maxima o mayor, introducida por el usuario
 };
