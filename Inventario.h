@@ -1,49 +1,45 @@
 #include <string.h>
-#include <string>
-#include <limits>
 #include <cctype>
 #include <algorithm>
 #include <ctime>
 #include "File.h"
+#include "Cola/Cola.h"
 
 /* Clase encargada de las funciones de manejo del Inventario del archivo --> Datos
  * @tparam Char -> Datos del archivo dado por el cliente --> Compocision con la clase file
  * @return Distintas funciones utiles para el manejo del inventario
  */
-
 class Inventario
 {
-
 private:
     int Depositos;
-    std::string Articulos;
     int Cantidad;
-    std::string Cantidadminima;
-    std::string CantidadxDeposito;
-    std::string Grupos;
-    std::string CodigoBarra;
 
 public:
     // Composicion
+
     file csv;
+
     std::vector<std::vector<std::string>> Datos;
     std::vector<std::vector<std::string>> dataSE;
     std::vector<std::vector<std::string>> dataO;
+    ListaV<std::vector<std::string>> DatosL;
+    ListaV<std::vector<std::string>> DatosSE;
+
+    int argc;
+    char **argv;
 
     /**
      * Constructor de la clase Inventario
-     * @tparam Char
+     * @tparam Int argc cantidad de argumentos
+     * @tparam Char **argv argumentos
      */
-    Inventario(int Depositos, std::string Articulos, int Cantidad, std::string Cantidadminima, std::string CantidadxDeposito, std::string Grupos, std::string CodigoBarra)
+    Inventario(int argc, char **argv)
     {
-        this->Depositos = Depositos;
-        this->Articulos = Articulos;
-        this->Cantidad = Cantidad;
-        this->Cantidadminima = Cantidadminima;
-        this->CantidadxDeposito = CantidadxDeposito;
-        this->Grupos = Grupos;
-        this->CodigoBarra = CodigoBarra;
+        this->argc = argc;
+        this->argv = argv;
     }
+
     /**
      * Constructor por defecto de la clase Inventario
      * @tparam Char
@@ -51,12 +47,49 @@ public:
     Inventario()
     {
         this->Depositos = ' ';
-        this->Articulos = ' ';
         this->Cantidad = ' ';
-        this->Cantidadminima = ' ';
-        this->CantidadxDeposito = ' ';
-        this->Grupos = ' ';
-        this->CodigoBarra = ' ';
+        this->argc = ' ';
+    }
+
+    /**
+     * Funcion que llama al resto de funciones
+     * @tparam int
+     * @return Cantidad
+     */
+
+    void menu()
+    {
+    }
+
+    /**
+     * Funcion que retorna la cantidad de Productos en el archivo
+     * @tparam int
+     * @return Cantidad
+     */
+
+    int GetCantidad()
+    {
+
+        DatosL = csv.readL();
+
+        Cantidad = DatosL.getTamanio();
+
+        return Cantidad;
+    }
+
+    /**
+     * Funcion que retorna la cantidad de Depositos en el archivo
+     * @tparam int
+     * @return Depositos
+     */
+    int GetDepositos()
+    {
+
+        DatosL = csv.readL();
+
+        Depositos = (DatosL.getTamanio(0)) - 5;
+
+        return Depositos;
     }
 
     /**
@@ -103,11 +136,11 @@ public:
      * @return Posicion del elemento buscado
      */
     int binarySearch(std::vector<std::vector<std::string>> &arr, int l, int r, std::string Identificador, int columna)
-    {
+    {   
         if (r >= l)
         {
             int mid = l + (r - l) / 2;
-
+        
             std::string codAUX = arr[mid][columna];
 
             // Si el elemento esta en la mitad
@@ -126,11 +159,14 @@ public:
                 return binarySearch(arr, mid + 1, r, Identificador, columna);
             }
         }
+        
 
         // Si el elemento no esta en el vector
-
+        std::cout << "No se encuentra el elemento" << std::endl;
         return -1;
     }
+    
+
 
     /**
      * Funcion que retorna la cantidad de Productos en el archivo
@@ -138,75 +174,226 @@ public:
      * @return Cantidad
      */
 
-    int GetCantidad()
+    int total_art_dif() //funciona
     {
+        DatosL = csv.readL();
 
-        Datos = csv.readV();
+        Cantidad = DatosL.getTamanio();
+            
 
-        Cantidad = Datos.size();
-
-        return Cantidad;
+        return Cantidad - 1;
     }
 
-    /**
-     * Funcion que retorna la cantidad de Depositos en el archivo
-     * @tparam int
-     * @return Depositos
-     */
-    int GetDepositos()
-    {
-
-        Datos = csv.readV();
-
-        Depositos = (Datos[0].size()) - 3;
-
-        return Depositos;
-    }
 
     /**
-     * Funcion que Muestra el inventario completo junto al grupo y nombre del articulo
-     * @tparam string codigoB
+     * Funcion que muestre la cantidad total de articulos
+     * @tparam void
      * @return void
      */
 
-    void StockTotal_CODIGO(std::string codigoB)
+    void total_art() //funciona
     {
+        Datos = csv.readV();
+        int fin = Datos[0].size();
+        int suma = 0, cont = 0;
+        std::string cantidadStr;
+        for (int i = 1; i < Datos.size(); i++)
+        {
+            int total = 0;
 
+            for (int j = 3; j < fin; j++) // Comienza desde el índice 3 y llega hasta el número de depósitos.
+            {
+                cantidadStr = Datos[i][j];
+                //Se eliminan los espacios en blanco
+                cantidadStr.erase(std::remove_if(cantidadStr.begin(), cantidadStr.end(), ::isspace), cantidadStr.end());
+                
+                //Se chequea que no este vacio el string
+                if (cantidadStr != "\"\"")
+                {
+                    for (int h = 0; h < strlen(cantidadStr.c_str())-1; h++)
+                        {
+                            cantidadStr[h] = cantidadStr[h + 1];
+                        }
+                        //Se pasa de valor char a int y se suman
+                    total += std::stoi(cantidadStr);
+                    suma += std::stoi(cantidadStr);
+                }
+            }
+
+            std::cout << "Artículo: " << Datos[i][1] << " - Stock total: " << total << std::endl; // verificar si es Datos[i][1] o Datos[i][2]
+        }
+        std::cout<<"El total de productos es: "<<suma<<std::endl;
+    }
+
+
+    /**
+     * Listado de artículos con cantidad n o menos de stock según un depósito
+     * @tparam int n numero de stock
+     * @tparam int deposito numero de deposito
+     * @return void
+     */
+
+    void min_stock(int n) //funciona
+    {
+        int fin = 0, auxStock = 0, cont;
+        std::string cantidadStr;
+        Cola<int> cola;
+        //Se lee el csv
+        Datos = csv.readV(); 
+
+        fin = Datos[0].size();
+
+        for (int i = 1; i < Datos.size(); i++)
+        {
+            auxStock = 0;
+            for (int j = 3; j < fin; j++)
+            {
+                cantidadStr = Datos[i][j];
+                //Se eliminan los espacios en blanco
+                cantidadStr.erase(std::remove_if(cantidadStr.begin(), cantidadStr.end(), ::isspace), cantidadStr.end());
+                //Se chequea que no este vacio el string
+                if (cantidadStr != "\"\"")
+                {
+                    for (int h = 0; h < strlen(cantidadStr.c_str())-1; h++)
+                        {
+                            //Se mueve el numero para eliminar la primera comilla para que funcione el stoi
+                            cantidadStr[h] = cantidadStr[h + 1];
+                        }
+                        //Se pasa de valor char a int y se suman
+                    auxStock += std::stoi(cantidadStr);
+                    
+                }
+            }
+            if (auxStock <= n)
+            {
+                //Los Articulos que se encuentren en el rango se encola su posicion
+                cola.encolar(i);
+            }
+        }
+            cont =cola.Tamanio();
+            //se Muestran todos los articulos guardados
+            if (cola.Tamanio() == 0)
+            {
+                std::cout<<"No hay articulos con stock mayor o igual a "<<n<<std::endl;
+            }else{
+            std::cout << "Código de barras\t\t\t\tArtículo" << std::endl;
+                for (int i = 0; i < cont; i++)
+                {
+                    std::cout << Datos[cola.peek()][1] << "\t\t\t" << Datos[cola.peek()][2] << "\t\t" << std::endl;
+                    cola.desencolar();
+                }   
+            }
+    }
+
+
+/**
+     * Listado de artículos con cantidad n o menos de stock según un depósito
+     * @tparam int n numero de stock
+     * @tparam int deposito numero de deposito
+     * @return void
+     */
+    void min_stock(int n, int deposito) //funciona
+    {
+        int fin = 0, auxStock = 0, cont;
+        std::string cantidadStr;
+        Cola<int> cola;
+        //Se lee el csv
+        Datos = csv.readV(); 
+
+        fin = Datos[0].size();
+
+        for (int i = 1; i < Datos.size(); i++)
+        {
+            auxStock = 0;
+                cantidadStr = Datos[i][deposito+3];
+                //Se eliminan los espacios en blanco
+                cantidadStr.erase(std::remove_if(cantidadStr.begin(), cantidadStr.end(), ::isspace), cantidadStr.end());
+                //Se chequea que no este vacio el string
+                if (cantidadStr != "\"\"")
+                {
+                    for (int h = 0; h < strlen(cantidadStr.c_str())-1; h++)
+                        {
+                            //Se mueve el numero para eliminar la primera comilla para que funcione el stoi
+                            cantidadStr[h] = cantidadStr[h + 1];
+                        }
+                        //Se pasa de valor char a int y se suman
+                    auxStock += std::stoi(cantidadStr);
+                    
+                }
+            if (auxStock <= n)
+            {
+                //Los Articulos que se encuentren en el rango se encola su posicion
+                cola.encolar(i);
+            }
+        }
+            cont = cola.Tamanio();
+            //se Muestran todos los articulos guardados
+            if (cola.Tamanio() == 0)
+            {
+                std::cout<<"No hay articulos con stock mayor o igual a "<<n<<std::endl;
+            }else{
+            std::cout << "Código de barras\t\t\t\tArtículo" << std::endl;
+                for (int i = 0; i < cont; i++)
+                {
+                    std::cout << Datos[cola.peek()][1] << "\t\t\t" << Datos[cola.peek()][2] << "\t\t" << std::endl;
+                    cola.desencolar();
+                }
+                
+            }
+            
+    }
+
+
+    /**
+     * Funcion que Muestra el inventario completo junto al grupo y nombre del articulo
+     * @tparam string NombreArticulo
+     * @return void
+     */
+
+    void stock(std::string NombreArticulo)
+    {
         int t0, t1;
 
         t0 = clock();
 
         // Quita los espacios en blanco sin perder los datos introducidos despues de teclear el espacio
-        codigoB.erase(std::remove_if(codigoB.begin(), codigoB.end(),
-                                     [](char &c)
-                                     {
-                                         return std::isspace<char>(c, std::locale::classic());
-                                     }),
-                      codigoB.end());
-
+        NombreArticulo.erase(std::remove_if(NombreArticulo.begin(), NombreArticulo.end(),
+                                            [](char &c)
+                                            {
+                                                return std::isspace<char>(c, std::locale::classic());
+                                            }),
+                             NombreArticulo.end());
         Datos = csv.readV();
-
-        dataSE = csv.DataSE(Datos, 1);
-
-        dataO = shellSort(dataSE, 1);
-
+        dataSE = csv.DataSE(Datos, 2);
+        dataO = shellSort(dataSE, 2);
+        
         int pos = 0;
-
-        pos = (binarySearch(dataO, 0, GetCantidad(), codigoB, 1));
-
+        
+        pos = (binarySearch(dataO, 1, GetCantidad()-1, NombreArticulo, 2)); 
+        if (pos == -1)
+        {
+            return;
+        }
+        
         std::cout << "--DATOS DEL PRODUCTO-- " << std::endl;
+        
+        DatosL = csv.readL();
+
+        DatosSE = csv.DataSE_L(DatosL, 2);
+
+                //troliado puto jejeje
 
         std::cout << std::endl;
 
-        std::cout << "-Codigo de barras " << codigoB << " ENCONTRADO" << std::endl;
-        std::cout << "-Nombre del Articulo: " << dataSE[pos][2] << std::endl;
+        std::cout << "-Nombre del Articulo " << NombreArticulo << " ENCONTRADO" << std::endl;
+        std::cout << "- Codigo de barras del Articulo: " << DatosSE(pos, 1) << std::endl;
 
         // Cantidad x deposito del producto
         std::cout << std::endl;
         std::cout << "--Cantidad por deposito--" << std::endl;
-        for (int i = 3; i < dataSE[pos].size(); i++)
+        for (int i = 3; i < DatosSE.getTamanio(pos); i++)
         {
-            std::cout << "Deposito " << i - 2 << ": " << dataSE[pos][i] << std::endl;
+            std::cout << "Deposito " << i - 2 << ": " << DatosSE(pos, i) << std::endl;
         }
 
         std::cout << std::endl;
@@ -214,10 +401,10 @@ public:
         // Cantidad total de productos
         int CantidadTotal = 0;
 
-        for (int i = 3; i < dataSE[pos].size(); i++)
+        for (int i = 3; i < DatosSE.getTamanio(pos); i++)
         {
 
-            std::string cantidadStr = dataSE[pos][i];
+            std::string cantidadStr = DatosSE(pos, i);
             cantidadStr.erase(std::remove(cantidadStr.begin(), cantidadStr.end(), '\"'), cantidadStr.end());
 
             if (!cantidadStr.empty())
@@ -233,6 +420,8 @@ public:
         t1 = clock();
 
         double time = (double(t1 - t0) / CLOCKS_PER_SEC);
+
+        std::cout << "Tiempo de ejecucion: " << time << std::endl;
     }
 
     /**
@@ -241,7 +430,7 @@ public:
      * @return void
      */
 
-    void StockTotal_NOMBRE(std::string NombreArticulo)
+    void stock(std::string NombreArticulo, int nro_deposito)
     {
         int t0, t1;
 
@@ -272,32 +461,11 @@ public:
         std::cout << "-Nombre del Articulo " << NombreArticulo << " ENCONTRADO" << std::endl;
         std::cout << "- Codigo de barras del Articulo: " << dataSE[pos][1] << std::endl;
 
-        // Cantidad x deposito del producto
+        // Cantidad del producto en x deposito
         std::cout << std::endl;
         std::cout << "--Cantidad por deposito--" << std::endl;
-        for (int i = 3; i < dataSE[pos].size(); i++)
-        {
-            std::cout << "Deposito " << i - 2 << ": " << dataSE[pos][i] << std::endl;
-        }
 
-        std::cout << std::endl;
-
-        // Cantidad total de productos
-        int CantidadTotal = 0;
-
-        for (int i = 3; i < dataSE[pos].size(); i++)
-        {
-
-            std::string cantidadStr = dataSE[pos][i];
-            cantidadStr.erase(std::remove(cantidadStr.begin(), cantidadStr.end(), '\"'), cantidadStr.end());
-
-            if (!cantidadStr.empty())
-            {
-                CantidadTotal += std::stoi(cantidadStr);
-            }
-        }
-
-        std::cout << "Cantidad total de productos: " << CantidadTotal << std::endl;
+        std::cout << "Deposito " << nro_deposito << ": " << dataSE[pos][nro_deposito] << std::endl;
 
         std::cout << std::endl;
 
@@ -308,13 +476,75 @@ public:
         std::cout << "Tiempo de ejecucion: " << time << std::endl;
     }
 
+
+    /**
+     * Listado de aquellos artículos cuyo stock es igual o supera el número n
+     * @tparam int n numero de stock
+     * @return void
+     */
+
+    void max_stock(int n) //funciona
+    {
+        int fin = 0, auxStock = 0, cont;
+        std::string cantidadStr;
+        Cola<int> cola;
+        //Se lee el csv
+        Datos = csv.readV(); 
+
+        fin = Datos[0].size();
+
+        for (int i = 1; i < Datos.size(); i++)
+        {
+            auxStock = 0;
+            for (int j = 3; j < fin; j++)
+            {
+                cantidadStr = Datos[i][j];
+                //Se eliminan los espacios en blanco
+                cantidadStr.erase(std::remove_if(cantidadStr.begin(), cantidadStr.end(), ::isspace), cantidadStr.end());
+                //Se chequea que no este vacio el string
+                if (cantidadStr != "\"\"")
+                {
+                    for (int h = 0; h < strlen(cantidadStr.c_str())-1; h++)
+                        {
+                            //Se mueve el numero para eliminar la primera comilla para que funcione el stoi
+                            cantidadStr[h] = cantidadStr[h + 1];
+                        }
+                        //Se pasa de valor char a int y se suman
+                    auxStock += std::stoi(cantidadStr);
+                    
+                }
+            }
+            if (auxStock >= n)
+            {
+                //Los Articulos que se encuentren en el rango se encola su posicion
+                cola.encolar(i);
+            }
+        }
+            cont =cola.Tamanio();
+            //se Muestran todos los articulos guardados
+            if (cola.Tamanio() == 0)
+            {
+                std::cout<<"No hay articulos con stock mayor o igual a "<<n<<std::endl;
+            }else{
+            std::cout << "Código de barras\t\t\t\tArtículo" << std::endl;
+                for (int i = 0; i < cont; i++)
+                {
+                    std::cout << Datos[cola.peek()][1] << "\t\t\t" << Datos[cola.peek()][2] << "\t\t" << std::endl;
+                    cola.desencolar();
+                }
+                
+            }
+            
+    }
+
+    
     /**
      * Funcion que Muestra el inventario completo de los articulos de los grupos encontrados en el archivo
      * @tparam void
      * @return void
      */
 
-    void GruposArticulos()
+    void Datos_xgrupos()
     {
 
         int t0, t1, t2, t3;
@@ -445,14 +675,12 @@ public:
 
         std::cout << "Tiempo de ejecucion: " << time2 << std::endl;
     }
-
-    // Funcion que determine la cantidad minima introducida por el usuario --> min_stock()
-
-    // Funcion que determine la cantidad maxima introducida por el usuario --> max_stock()
-
-    //Funcion que muestre la cantidad total de articulos --> cantidad de todos los depositos de todos los articulos
-
-    // Funcion que muestre lista de articulos con cantidad menor a la minima
-
-    // Funcion que muestre lista de articulos con la cantidad maxima o mayor, introducida por el usuario
 };
+/*
+total_art_dif Cantidad total de artículos diferentes.
+-total_art Cantidad total de artículos.
+-min_stock [n] Listado de artículos con cantidad n o menos de stock.
+-min_stock [n],[deposito] Listado de artículos con cantidad n o menos de stock según un depósito.
+-stock [nombre_articulo] El stock total del artículo ingresado como argumento.
+-stock [nombre_articulo],[depósito] El stock del artículo en un depósito.
+-max_Stock [n] Listado de aquellos artículos cuyo stock es igual o supera el número n.*/

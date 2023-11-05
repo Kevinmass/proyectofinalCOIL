@@ -4,9 +4,14 @@ using namespace std;
 
 int main()
 {
+
+    std::string nombre;
+    int aux;
     Inventario inventario;
-    string codigo;
-    getline(cin, codigo);
-    inventario.stock(codigo);
-    cout<< inventario.total_art_dif();
+    getline(cin, nombre);
+    cout << nombre << endl;
+    /*
+"BANQUETA TAPIZADA COST BCO  BASE PINTADA NEGRO"
+*/
+    inventario.stock(nombre);
 }

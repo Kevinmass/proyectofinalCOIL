@@ -1,8 +1,9 @@
 #include <iostream>
 #include <vector>
-#include "Procesador_Inventario.h"
+#include "Inventario.h"
 
-int main(){
-Procesador_Inventario P;
-P.menu();
+int main(int argc, char *argv[]){
+
+Inventario P(argc, argv);
+
 }

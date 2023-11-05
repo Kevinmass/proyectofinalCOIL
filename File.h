@@ -2,6 +2,7 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
+#include "Lista/ListaV.h"
 
 //.
 
@@ -11,8 +12,8 @@
  * @return Data del archivo leido en forma de vector de vectores de strings
  */
 
-class file
-{
+class file{
+
 
 private:
 public:
@@ -24,34 +25,34 @@ public:
     std::vector<std::vector<std::string>> readV()
     {
         // incluir archivo tecleado por el usuario -> En lo posible
-
-        std::ifstream file("Inventario.csv", std::ios::in);
+        
+        std::ifstream file("InventariO.csv", std::ios::in);
 
         if (!file.is_open())
         {
             std::cerr << "Failed to open file\n";
         }
 
-        std::vector<std::vector<std::string>> data;
+        std::vector<std::vector<std::string>> Datos;
 
-        std::string line;
-        while (std::getline(file, line))
+        std::string Linea;
+        while (std::getline(file, Linea))
         {
-            std::vector<std::string> row;
-            std::stringstream ss(line);
+            std::vector<std::string> Columna;
+            std::stringstream ss(Linea);
 
-            std::string cell;
-            while (std::getline(ss, cell, ','))
+            std::string Casilla;
+            while (std::getline(ss, Casilla, ','))
             {
-                row.push_back(cell);
+                Columna.push_back(Casilla);
             }
 
-            data.push_back(row);
+            Datos.push_back(Columna);
         }
 
         file.close();
 
-        return data;
+        return Datos;
     }
 
     /**
@@ -72,5 +73,59 @@ public:
         }
 
         return dataSE;
+    }
+
+    ListaV<std::vector<std::string>> readL()
+    {
+        // incluir archivo tecleado por el usuario -> En lo posible
+
+        std::ifstream file("InventariO.csv");
+        if (!file.is_open())
+        {
+            std::cerr << "Failed to open file\n";
+        }
+
+        ListaV<std::vector<std::string>> Data;
+
+        std::string line;
+        while (std::getline(file, line))
+        {
+            std::vector<std::string> row;
+            std::stringstream ss(line);
+
+            std::string cell;
+            while (std::getline(ss, cell, ','))
+            {
+                row.push_back(cell);
+            }
+
+            Data.insertarV(row);
+        }
+
+        Data.invertirV();
+
+        file.close();
+
+        return Data;
+    }
+    
+    /**
+     * Funcion que quita los espacios en blanco entre los strings de las diferentes posiciones del vector de vectores en la columna del codigo
+     * @tparam Vector de vectores de strings
+     * @return Vector de vectores de strings sin espacios en blanco
+     */
+
+    ListaV<std::vector<std::string>> DataSE_L(ListaV<std::vector<std::string>> &arr, int columna)
+    {
+
+        ListaV<std::vector<std::string>> DatosSE = arr;
+
+        for (int i = 0; i < DatosSE.getTamanio(); i++)
+        {
+
+            DatosSE(i, columna).erase(remove_if(DatosSE(i, columna).begin(), DatosSE(i, columna).end(), ::isspace), DatosSE(i, columna).end());
+        }
+
+        return DatosSE;
     }
 };
