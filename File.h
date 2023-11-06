@@ -2,6 +2,7 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
+#include <algorithm>
 #include "Lista/ListaV.h"
 
 //.
@@ -22,11 +23,11 @@ public:
      * @tparam void
      * @return Data -> datos del archivo csv en forma de vector de vectores de strings
      */
-    std::vector<std::vector<std::string>> readV()
+    std::vector<std::vector<std::string>> readV(std::string csv)
     {
         // incluir archivo tecleado por el usuario -> En lo posible
         
-        std::ifstream file("InventariO.csv", std::ios::in);
+        std::ifstream file(csv, std::ios::in);
 
         if (!file.is_open())
         {
@@ -69,17 +70,17 @@ public:
         for (int i = 0; i < dataSE.size(); i++)
         {
 
-            dataSE[i][Columna].erase(remove_if(dataSE[i][Columna].begin(), dataSE[i][Columna].end(), ::isspace), dataSE[i][Columna].end());
+            dataSE[i][Columna].erase(std::remove_if(dataSE[i][Columna].begin(), dataSE[i][Columna].end(), ::isspace), dataSE[i][Columna].end());
         }
 
         return dataSE;
     }
 
-    ListaV<std::vector<std::string>> readL()
+    ListaV<std::vector<std::string>> readL(std::string csv)
     {
         // incluir archivo tecleado por el usuario -> En lo posible
 
-        std::ifstream file("InventariO.csv");
+        std::ifstream file(csv);
         if (!file.is_open())
         {
             std::cerr << "Failed to open file\n";
@@ -123,7 +124,7 @@ public:
         for (int i = 0; i < DatosSE.getTamanio(); i++)
         {
 
-            DatosSE(i, columna).erase(remove_if(DatosSE(i, columna).begin(), DatosSE(i, columna).end(), ::isspace), DatosSE(i, columna).end());
+            DatosSE(i, columna).erase(std::remove_if(DatosSE(i, columna).begin(), DatosSE(i, columna).end(), ::isspace), DatosSE(i, columna).end());
         }
 
         return DatosSE;

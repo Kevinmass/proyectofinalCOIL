@@ -2,6 +2,7 @@
 #include <string>
 #include <stdexcept>
 #include <list>
+#include <iostream>
 
 /**
  * Clase que implementa una Lista enlasada generica con nodos de tipo vector
@@ -147,7 +148,7 @@ public:
     int getTamanio()
     {
         NodoV<std::vector<std::string>> *aux = inicio;
-        int contador = 0;
+        int contador = 1;
 
         while (aux != nullptr)
         {
@@ -177,7 +178,7 @@ public:
 
     // Tamaño de la fila especifica
     int getTamanio(std::size_t fila)
-    {
+    {   
         return (*this)[fila].size();
     }
 

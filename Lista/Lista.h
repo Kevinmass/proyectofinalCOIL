@@ -244,7 +244,6 @@ void Lista<T>::print() {
         std::cout << aux->getDato() << "->";
         aux = aux->getSiguiente();
     }
-    std::cout << "NULL" << std::endl;
 }
 
 #endif // U02_LISTAS_LISTA_LISTA_H_
